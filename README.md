@@ -1,11 +1,11 @@
 # Remix & Mantine & Yarn
--
+
 ## Development
 - For start your terminal:
 ```sh
 yarn dev
 ```
--
+
 ### Project Tree
 ```sh
 remixtest1
