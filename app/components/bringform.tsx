@@ -90,8 +90,10 @@ export default function BringFromModal({ closeModal }: { closeModal: () => void 
           placeholder="Select The Type"
               value={selectedType}
               onChange={(value) => {
+                if (value !== null) {
                 handleTypeChange(value);
                 form.reset();
+                }
               }}
           data={[
             { value: 'Gun', label: 'Gun' },
