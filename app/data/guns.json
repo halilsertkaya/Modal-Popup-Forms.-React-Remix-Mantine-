@@ -1,0 +1,8 @@
+{
+"guns": [
+    { "category": "AK-47",  "stattrak": true,  "floatname": "Factory New" },
+    { "category": "M4A1-S", "stattrak": false, "floatname": "Minimal Wear" },
+    { "category": "UMP",    "stattrak": true,  "floatname": "Field Tested" },
+    { "category": "USP-S",  "stattrak": true,  "floatname": "Battle-Scared" }
+]
+}

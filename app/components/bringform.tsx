@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Grid, Select, Modal, Col, TextInput, Center } from '@mantine/core';
+import { Button, Grid, Select, Modal, Col, TextInput, Center, Checkbox, Group } from '@mantine/core';
 import { useForm } from '@mantine/form';
 
 export default function BringFromModal({ closeModal }: { closeModal: () => void }) {
@@ -11,6 +11,9 @@ export default function BringFromModal({ closeModal }: { closeModal: () => void 
       type: 'Gun',
       minPrice: '0',
       maxPrice: '1000',
+      weapon: '',
+      skin: '',
+      patternid: '',
     },
   });
 
@@ -96,10 +99,10 @@ export default function BringFromModal({ closeModal }: { closeModal: () => void 
                 }
               }}
           data={[
-            { value: 'Gun', label: 'Gun' },
-            { value: 'Knife', label: 'Knife' },
-            { value: 'Glove', label: 'Glove' },
-            { value: 'Crates', label: 'Crates' },
+            { value: 'Gun',     label: 'Gun'     },
+            { value: 'Knife',   label: 'Knife'   },
+            { value: 'Glove',   label: 'Glove'   },
+            { value: 'Crates',  label: 'Crates'  },
             { value: 'Sticker', label: 'Sticker' },
           ]}
         />
@@ -107,17 +110,89 @@ export default function BringFromModal({ closeModal }: { closeModal: () => void 
 
                     {selectedType === 'Gun' && (
             <>
-            <Grid.Col span={4}>
-              <Center>Gun Price Range</Center>
+            <Grid.Col span={6}>
+              <Center>
+              <Select
+          label="Select Weapon"
+          placeholder="All"
+          {...form.getInputProps('weapon')}
+          data={[
+            { value: 'AK-47'   , label: 'AK-47'   },
+            { value: 'AWP'     , label: 'AWP'     },
+            { value: 'M4A1-S'  , label: 'M4A1-S'  },
+            { value: 'USP-S'   , label: 'USP-S'   }
+          ]}
+        />
+              </Center>
             </Grid.Col>
-            <Grid.Col span={4}>
-              <Center>Gun Skin Select</Center>
+            <Grid.Col span={6}>
+              <Center>
+
+              <Select
+          label="Select Skin"
+          placeholder="All"
+          {...form.getInputProps('skin')}
+          data={[
+            { value: 'Doppler'       , label: 'Doppler'       },
+            { value: 'Gamma Doppler' , label: 'Gamma Doppler' },
+            { value: 'Night'         , label: 'Night'         },
+            { value: 'Case Hardened' , label: 'Case Hardened' }
+          ]}
+        />
+
+              </Center>
             </Grid.Col>
-            <Grid.Col span={4}>
-              <Center>Gun Colors Select</Center>
+            <Grid.Col span={6}>
+              <Center>
+                
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <TextInput
+            type="number"
+            label="Min Price"
+            placeholder="Min Price"
+            {...form.getInputProps('minPrice')}
+            style={{ marginRight: '1rem' }}
+          />
+          <TextInput
+            type="number"
+            label="Max Price"
+            placeholder="Max Price"
+            {...form.getInputProps('maxPrice')}
+          />
+        </div>
+
+              </Center>
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <Center>
+                
+
+              <TextInput
+            type="number"
+            label="Pattern ID"
+            placeholder="Pattern ID"
+            {...form.getInputProps('patternid')}
+          />
+
+              </Center>
             </Grid.Col>
             <Grid.Col span={12}>
-              <Center> Gun Price Range</Center>
+<Center>
+            <Checkbox.Group
+      defaultValue={['react']}
+      label="Select Category"
+      description="Categories:"
+      withAsterisk
+    >
+      <Group mt="xs">
+        <Checkbox value="Normal" label="Normal" />
+        <Checkbox value="Souvenir" label="Souvenir" />
+        <Checkbox value="StatTrak™" label="StatTrak™" />
+        <Checkbox value="★" label="★" />
+        <Checkbox value="★ StatTrak™" label="★ StatTrak™" />
+      </Group>
+    </Checkbox.Group>
+    </Center>
             </Grid.Col>
             </>
                     )}
@@ -157,10 +232,10 @@ export default function BringFromModal({ closeModal }: { closeModal: () => void 
                     )}
 
       <Grid.Col span={12} style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
-        <Button onClick={closeModal} color="gray">
+        <Button onClick={closeModal} variant="gradient" gradient={{ from: '#ed6ea0', to: '#ec8c69', deg: 35 }}>
           Close
         </Button>
-        <Button type="submit" form="bring-form" variant="filled">
+        <Button type="submit" form="bring-form" variant="gradient" gradient={{ from: 'teal', to: 'lime', deg: 105 }}>
           Submit
         </Button>
       </Grid.Col>

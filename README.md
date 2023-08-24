@@ -13,7 +13,6 @@ remixtest1
 ├─ .gitignore
 ├─ app
 │  ├─ components
-│  │  ├─ bringform v1.tsx
 │  │  └─ bringform.tsx
 │  ├─ entry.client.tsx
 │  ├─ entry.server.tsx

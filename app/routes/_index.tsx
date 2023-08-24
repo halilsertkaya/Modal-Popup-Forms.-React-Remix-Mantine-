@@ -12,7 +12,7 @@ export default function Index() {
   return (
     <Container size="md" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <div>
-        <Button onClick={handleModalToggle}>Add New Task</Button>
+        <Button onClick={handleModalToggle} variant="gradient" gradient={{ from: 'teal', to: 'blue', deg: 60 }}>Add New Task</Button>
         <Modal opened={modalOpen} onClose={handleModalToggle}>
           <BringFromModal closeModal={handleModalToggle} />
         </Modal>
