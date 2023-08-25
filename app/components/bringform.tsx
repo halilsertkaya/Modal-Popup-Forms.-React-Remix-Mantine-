@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Grid, Select, Modal, Col, TextInput, Center, Checkbox, Group } from '@mantine/core';
+import { Button, Grid, Select, Modal, Col, TextInput, Center, Checkbox, Group, NumberInput, Flex, RangeSlider } from '@mantine/core';
 import { useForm } from '@mantine/form';
 
 export default function BringFromModal({ closeModal }: { closeModal: () => void }) {
@@ -16,6 +16,18 @@ export default function BringFromModal({ closeModal }: { closeModal: () => void 
       patternid: '',
     },
   });
+
+  /// Price slider updates.
+  const [sliderValue, setSliderValue] = useState([Number(form.values.minPrice), Number(form.values.maxPrice)]);
+  const [numberInputValue, setNumberInputValue] = useState(0); // veya başka bir varsayılan değer
+  const handleSliderChange = (newValue: number[]) => {
+    setSliderValue(newValue);
+    setNumberInputValue(newValue[0]); // Slider'ın başlangıç değeri olarak ilk elemanı kullanabilirsiniz
+  };
+  const handleNumberInputChange = (newValue: string) => {
+    setNumberInputValue(newValue === "" ? 0 : Number(newValue)); // Boş ise 0 olarak ayarla, değilse string'i number'a çevir
+  };
+  ///
 
   const [selectedType, setSelectedType] = useState('');
   
@@ -67,8 +79,14 @@ export default function BringFromModal({ closeModal }: { closeModal: () => void 
           placeholder="Select Page Number"
           {...form.getInputProps('page')}
           data={[
-            { value: '1', label: '1' },
-            { value: '2', label: '2' }
+            { label: '1', value: '1' },
+            { label: '2', value: '2' },
+            { label: '5', value: '5' },
+            { label: '10', value: '10' },
+            { label: '15', value: '15' },
+            { label: '20', value: '20' },
+            { label: '25', value: '25' },
+            { label: 'All', value: 'all' },
           ]}
         />
       </Grid.Col>
@@ -99,16 +117,18 @@ export default function BringFromModal({ closeModal }: { closeModal: () => void 
                 }
               }}
           data={[
-            { value: 'Gun',     label: 'Gun'     },
-            { value: 'Knife',   label: 'Knife'   },
-            { value: 'Glove',   label: 'Glove'   },
-            { value: 'Crates',  label: 'Crates'  },
-            { value: 'Sticker', label: 'Sticker' },
+            { label: 'All', value: 'all' },
+            { label: 'Gun', value: 'gun' },
+            { label: 'Knife', value: 'knife' },
+            { label: 'Glove', value: 'glove' },
+            { label: 'Case', value: 'crate' },
+            { label: 'Sticker', value: 'sticker' },
+            { label: 'Sticker Capsule', value: 'stickerCapsule' },
           ]}
         />
       </Grid.Col>
 
-                    {selectedType === 'Gun' && (
+                    {selectedType === 'gun' && (
             <>
             <Grid.Col span={6}>
               <Center>
@@ -117,10 +137,9 @@ export default function BringFromModal({ closeModal }: { closeModal: () => void 
           placeholder="All"
           {...form.getInputProps('weapon')}
           data={[
-            { value: 'AK-47'   , label: 'AK-47'   },
-            { value: 'AWP'     , label: 'AWP'     },
-            { value: 'M4A1-S'  , label: 'M4A1-S'  },
-            { value: 'USP-S'   , label: 'USP-S'   }
+            { label: 'Awp', value: 'awp' },
+            { label: 'Ak-47', value: 'ak47' },
+            { label: 'Desert Eagle', value: 'desertEagle' },
           ]}
         />
               </Center>
@@ -133,36 +152,77 @@ export default function BringFromModal({ closeModal }: { closeModal: () => void 
           placeholder="All"
           {...form.getInputProps('skin')}
           data={[
-            { value: 'Doppler'       , label: 'Doppler'       },
-            { value: 'Gamma Doppler' , label: 'Gamma Doppler' },
-            { value: 'Night'         , label: 'Night'         },
-            { value: 'Case Hardened' , label: 'Case Hardened' }
+            { label: 'Dragon lore', value: 'awpDragonlore' },
+            { label: 'Redline', value: 'ak47Redline' },
+            { label: 'Blaze', value: 'desertEagleBlaze' },
           ]}
         />
 
               </Center>
             </Grid.Col>
             <Grid.Col span={6}>
-              <Center>
-                
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <TextInput
-            type="number"
-            label="Min Price"
-            placeholder="Min Price"
-            {...form.getInputProps('minPrice')}
-            style={{ marginRight: '1rem' }}
-          />
-          <TextInput
-            type="number"
-            label="Max Price"
-            placeholder="Max Price"
-            {...form.getInputProps('maxPrice')}
-          />
-        </div>
 
-              </Center>
-            </Grid.Col>
+<Flex direction="column" align="center" ml="3rem" >
+<span>Float range</span>
+<RangeSlider 
+value={[sliderValue[0], sliderValue[1]]} 
+onChange={handleSliderChange} 
+defaultValue={[Number(form.values.minPrice), Number(form.values.maxPrice)]} miw="20rem" 
+/>
+
+  <Flex
+    direction="row"
+    justify="center"
+    gap="5rem"
+    mt="8px"
+    mb="2rem"
+  >
+    <NumberInput
+      hideControls
+      placeholder="0"
+      value={sliderValue[0]}
+      onChange={(newValue) => {
+        setNumberInputValue(newValue === "" ? 0 : Number(newValue));
+        setSliderValue([newValue === "" ? 0 : Number(newValue), sliderValue[1]]);
+      }}
+      max={Number(form.values.maxPrice)}
+      min={Number(form.values.minPrice)}
+      step={1}
+      size="xs"
+      mah="3px"
+      styles={{
+        input: {
+          height: '12px',
+          textAlign: 'center',
+          width: '8rem',
+        },
+      }}
+    />
+
+    <NumberInput
+      hideControls
+      placeholder="1"
+      value={sliderValue[1]}
+      onChange={(newValue) => {
+        setNumberInputValue(newValue === "" ? 0 : Number(newValue));
+        setSliderValue([sliderValue[0], newValue === "" ? 0 : Number(newValue)]);
+      }}
+      max={Number(form.values.maxPrice)}
+      min={Number(form.values.minPrice)}
+      step={1}
+      size="xs"
+      styles={{
+        input: {
+          height: '2px',
+          textAlign: 'center',
+          width: '8rem',
+        },
+      }}
+    />
+  </Flex>
+</Flex>
+
+    </Grid.Col>
             <Grid.Col span={6}>
               <Center>
                 
@@ -188,6 +248,131 @@ export default function BringFromModal({ closeModal }: { closeModal: () => void 
         <Checkbox value="Normal" label="Normal" />
         <Checkbox value="Souvenir" label="Souvenir" />
         <Checkbox value="StatTrak™" label="StatTrak™" />
+      </Group>
+    </Checkbox.Group>
+    </Center>
+            </Grid.Col>
+            </>
+                    )}
+
+                    {selectedType === 'knife' && (
+<>
+              
+            <Grid.Col span={6}>
+              <Center>
+              <Select
+          label="Select Weapon"
+          placeholder="All"
+          {...form.getInputProps('weapon')}
+          data={[
+            { label: 'Karambit', value: 'karambit' },
+            { label: 'Bayonet', value: 'bayonet' },
+            { label: 'Falchion', value: 'falchion' },
+          ]}
+        />
+              </Center>
+            </Grid.Col>
+            <Grid.Col span={6}>
+              <Center>
+
+              <Select
+          label="Select Skin"
+          placeholder="All"
+          {...form.getInputProps('skin')}
+          data={[
+            { label: 'Fade', value: 'fade' },
+            { label: 'Tiger Tooth', value: 'tigerTooth' },
+            { label: 'Crimson Web', value: 'crimsonWeb' },
+          ]}
+        />
+
+              </Center>
+            </Grid.Col>
+            <Grid.Col span={6}>
+
+<Flex direction="column" align="center" ml="3rem" >
+<span>Float range</span>
+<RangeSlider 
+value={[sliderValue[0], sliderValue[1]]} 
+onChange={handleSliderChange} 
+defaultValue={[Number(form.values.minPrice), Number(form.values.maxPrice)]} miw="20rem" 
+/>
+
+  <Flex
+    direction="row"
+    justify="center"
+    gap="5rem"
+    mt="8px"
+    mb="2rem"
+  >
+    <NumberInput
+      hideControls
+      placeholder="0"
+      value={sliderValue[0]}
+      onChange={(newValue) => {
+        setNumberInputValue(newValue === "" ? 0 : Number(newValue));
+        setSliderValue([newValue === "" ? 0 : Number(newValue), sliderValue[1]]);
+      }}
+      max={Number(form.values.maxPrice)}
+      min={Number(form.values.minPrice)}
+      step={1}
+      size="xs"
+      mah="3px"
+      styles={{
+        input: {
+          height: '12px',
+          textAlign: 'center',
+          width: '8rem',
+        },
+      }}
+    />
+
+    <NumberInput
+      hideControls
+      placeholder="1"
+      value={sliderValue[1]}
+      onChange={(newValue) => {
+        setNumberInputValue(newValue === "" ? 0 : Number(newValue));
+        setSliderValue([sliderValue[0], newValue === "" ? 0 : Number(newValue)]);
+      }}
+      max={Number(form.values.maxPrice)}
+      min={Number(form.values.minPrice)}
+      step={1}
+      size="xs"
+      styles={{
+        input: {
+          height: '2px',
+          textAlign: 'center',
+          width: '8rem',
+        },
+      }}
+    />
+  </Flex>
+</Flex>
+
+    </Grid.Col>
+            <Grid.Col span={6}>
+              <Center>
+                
+
+              <TextInput
+            type="number"
+            label="Pattern ID"
+            placeholder="Pattern ID"
+            {...form.getInputProps('patternid')}
+          />
+
+              </Center>
+            </Grid.Col>
+            <Grid.Col span={12}>
+<Center>
+            <Checkbox.Group
+      defaultValue={['react']}
+      label="Select Category"
+      description="Categories:"
+      withAsterisk
+    >
+      <Group mt="xs">
         <Checkbox value="★" label="★" />
         <Checkbox value="★ StatTrak™" label="★ StatTrak™" />
       </Group>
@@ -197,37 +382,169 @@ export default function BringFromModal({ closeModal }: { closeModal: () => void 
             </>
                     )}
 
-                    {selectedType === 'Knife' && (
-                      <Grid.Col span={12}>
-                      Knife Special inputs.
-                      </Grid.Col>
+                    {selectedType === 'glove' && (
+                      <>
+              
+              <Grid.Col span={6}>
+                <Center>
+                <Select
+            label="Select Weapon"
+            placeholder="All"
+            {...form.getInputProps('weapon')}
+            data={[
+              { label: 'Karambit', value: 'karambit' },
+              { label: 'Bayonet', value: 'bayonet' },
+              { label: 'Falchion', value: 'falchion' },
+            ]}
+          />
+                </Center>
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <Center>
+  
+                <Select
+            label="Select Skin"
+            placeholder="All"
+            {...form.getInputProps('skin')}
+            data={[
+              { label: 'Fade', value: 'fade' },
+              { label: 'Tiger Tooth', value: 'tigerTooth' },
+              { label: 'Crimson Web', value: 'crimsonWeb' },
+            ]}
+          />
+  
+                </Center>
+              </Grid.Col>
+              <Grid.Col span={6}>
+
+          <Flex direction="column" align="center" ml="3rem" >
+          <span>Float range</span>
+  <RangeSlider 
+    value={[sliderValue[0], sliderValue[1]]} 
+    onChange={handleSliderChange} 
+    defaultValue={[Number(form.values.minPrice), Number(form.values.maxPrice)]} miw="20rem" 
+  />
+
+            <Flex
+              direction="row"
+              justify="center"
+              gap="5rem"
+              mt="8px"
+              mb="2rem"
+            >
+              <NumberInput
+                hideControls
+                placeholder="0"
+                value={sliderValue[0]}
+                onChange={(newValue) => {
+                  setNumberInputValue(newValue === "" ? 0 : Number(newValue));
+                  setSliderValue([newValue === "" ? 0 : Number(newValue), sliderValue[1]]);
+                }}
+                max={Number(form.values.maxPrice)}
+                min={Number(form.values.minPrice)}
+                step={1}
+                size="xs"
+                mah="3px"
+                styles={{
+                  input: {
+                    height: '12px',
+                    textAlign: 'center',
+                    width: '8rem',
+                  },
+                }}
+              />
+
+              <NumberInput
+                hideControls
+                placeholder="1"
+                value={sliderValue[1]}
+                onChange={(newValue) => {
+                  setNumberInputValue(newValue === "" ? 0 : Number(newValue));
+                  setSliderValue([sliderValue[0], newValue === "" ? 0 : Number(newValue)]);
+                }}
+                max={Number(form.values.maxPrice)}
+                min={Number(form.values.minPrice)}
+                step={1}
+                size="xs"
+                styles={{
+                  input: {
+                    height: '2px',
+                    textAlign: 'center',
+                    width: '8rem',
+                  },
+                }}
+              />
+            </Flex>
+          </Flex>
+  
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <Center>
+                  
+  
+                <TextInput
+              type="number"
+              label="Pattern ID"
+              placeholder="Pattern ID"
+              {...form.getInputProps('patternid')}
+            />
+  
+                </Center>
+              </Grid.Col>
+
+              </>
                     )}
 
-                    {selectedType === 'Glove' && (
-                      <Grid.Col span={12}>
-                      Glove Special inputs.
-                      </Grid.Col>
-                    )}
-
-                    {selectedType === 'Crates' && (
-                      <Grid.Col span={12}>
+                    {selectedType === 'crate' && (
       <Grid.Col span={12}>
         <Select
-          label="Select Case"
-          placeholder="Case#No"
-          {...form.getInputProps('sort')}
+          label="Case"
+          placeholder="Select Case"
+          {...form.getInputProps('crate')}
           data={[
-            { value: 'Case#1', label: 'Case#1' },
-            { value: 'Case#2', label: 'Case#2' }
+            { label: 'Glove Case', value: 'gloveCase' },
+            { label: 'Spectrum Case', value: 'spectrumCase' },
+            { label: 'Prisma 2 Case', value: 'prisma2Case' },
           ]}
         />
       </Grid.Col>
-                      </Grid.Col>
                     )}
 
-                    {selectedType === 'Sticker' && (
+                      {selectedType === 'sticker' && (
                       <Grid.Col span={12}>
-                      Sticker Special inputs.
+        <Select
+          label="Sticker"
+          placeholder="Select Sticker"
+          {...form.getInputProps('sticker')}
+          data={[
+            {
+              label: 'Sticker | Titan (Holo) | Katowice 2014',
+              value: 'Sticker | Titan (Holo) | Katowice 2014',
+            },
+            {
+              label: 'Sticker | iBUYPOWER (Holo) | Katowice 2014',
+              value: 'Sticker | iBUYPOWER (Holo) | Katowice 2014',
+            },
+            {
+              label: 'Sticker | Vox Eminor (Holo) | Katowice 2014',
+              value: 'Sticker | Vox Eminor (Holo) | Katowice 2014',
+            },
+          ]}
+        />
+                      </Grid.Col>
+                    )}
+                    {selectedType === 'stickerCapsule' && (
+                      <Grid.Col span={12}>
+
+<Select
+          label="Sticker Capsule"
+          placeholder="Select Sticker Capsule"
+          {...form.getInputProps('crate')}
+          data={[
+            { label: 'Paris 2023 Legends Capsule', value: 'p23legends' },
+            { label: 'Paris 2023 Contenders Capsule', value: 'p23contenders' },
+          ]}
+        />
                       </Grid.Col>
                     )}
 
