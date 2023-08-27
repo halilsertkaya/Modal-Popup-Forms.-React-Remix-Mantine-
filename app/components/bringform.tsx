@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button, Grid, Select, Modal, Col, TextInput, Center, Checkbox, Group, NumberInput, Flex, RangeSlider } from '@mantine/core';
 import { useForm } from '@mantine/form';
 
-export default function BringFromModal({ closeModal }: { closeModal: () => void }) {
+export default function BringFromModal({ closeModal, setConfirmClose }: { closeModal: () => void; setConfirmClose: (value: boolean) => void }) {
   const form = useForm({
     initialValues: {
       proxy: '1',
@@ -40,7 +40,9 @@ export default function BringFromModal({ closeModal }: { closeModal: () => void 
   };
 
   return (
-<Modal opened={true} size="lg" title="Test Form" onClose={closeModal}>
+<Modal opened={true} size="lg" title="Test Form" onClose={() => {
+   setConfirmClose(true); // emin misiniz iletişim kutusunu göster
+}}>
   <form onSubmit={form.onSubmit(handleSubmit)}>
     <Grid gutter="lg">
       <Grid.Col span={12}>
@@ -549,7 +551,7 @@ defaultValue={[Number(form.values.minPrice), Number(form.values.maxPrice)]} miw=
                     )}
 
       <Grid.Col span={12} style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem' }}>
-        <Button onClick={closeModal} variant="gradient" gradient={{ from: '#ed6ea0', to: '#ec8c69', deg: 35 }}>
+        <Button onClick={() => setConfirmClose(true)} variant="gradient" gradient={{ from: '#ed6ea0', to: '#ec8c69', deg: 35 }}>
           Close
         </Button>
         <Button type="submit" form="bring-form" variant="gradient" gradient={{ from: 'teal', to: 'lime', deg: 105 }}>
